@@ -21,6 +21,7 @@ app.get("/", function(req, res){
         startingContent: homeStartingContent,
         posts: posts
     });
+    // console.log(req.body);
 });
 
 app.get("/about", function(req, res){
@@ -68,6 +69,7 @@ app.get("/posts/:postName", function(req, res){
     }
 
 });
+
 
 app.listen(3000, function(){
     console.log("Server is started on the port 3000.");

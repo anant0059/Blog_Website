@@ -6,7 +6,7 @@
         <% for ( let post of posts ){ %>
             <div>
                 <h3><%= post.title %></h3>
-                <p><%= post.content %></p>
+                <p><%= post.content.substring(0, 100) + "... " %><a style="text-decoration: none" href=<%= "/posts/" + post.title %> >Read More</a></p>
             </div>
         <% } %>
     </div>
