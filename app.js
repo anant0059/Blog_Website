@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const _ = require("lodash");
 
 const app = express();
 
@@ -18,7 +19,8 @@ app.use(express.static("public"));
 app.get("/", function(req, res){
     res.render("home", {
         startingContent: homeStartingContent,
-        posts: posts});
+        posts: posts
+    });
 });
 
 app.get("/about", function(req, res){
@@ -46,6 +48,25 @@ app.post("/compose", function(req, res){
     //console.log(posts);
 
     res.redirect("/");
+});
+
+
+app.get("/posts/:postName", function(req, res){
+    const requestedTitle = _.lowerCase(req.params.postName);
+
+    for(let post of posts){
+
+        const storedTitle = _.lowerCase(post.title);
+
+        if( storedTitle === requestedTitle ){
+            //console.log("Matched!");
+            res.render("post", {
+                postTitle: post.title,
+                postContent: post.content
+            });
+        }
+    }
+
 });
 
 app.listen(3000, function(){
