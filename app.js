@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
+const https = require("https");
 
 const app = express();
 
@@ -16,10 +17,43 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+// temperature and weather
+
+const query = "Jammu";
+const apikey = "494e541d8491f73b716cc6260a480714";
+const unit = "metric";
+
+const url = "https://api.openweathermap.org/data/2.5/weather?q=" + query + "&appid=" + apikey + "&units=" + unit;
+
+var temp = "";
+var weatherDescription = "";
+var imageURL = "";
+
+https.get(url, function(response){
+    console.log(response.statusCode);
+
+    response.on("data", function(data){
+        //console.log(data);
+
+        const weatherData = JSON.parse(data);
+        temp = weatherData.main.temp;
+        console.log(temp);
+        weatherDescription = weatherData.weather[0].description;
+        console.log(weatherDescription);
+
+        const icon = weatherData.weather[0].icon;
+        imageURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+    })
+});
+
 app.get("/", function(req, res){
+
     res.render("home", {
         startingContent: homeStartingContent,
-        posts: posts
+        posts: posts,
+        temp: temp,
+        weatherDescription: weatherDescription,
+        imageURL: imageURL
     });
     // console.log(req.body);
 });
